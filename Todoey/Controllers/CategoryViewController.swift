@@ -99,6 +99,21 @@ class CategoryViewController: UITableViewController {
         }
     }
     
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            if let item = categories?[indexPath.row] {
+                do {
+                    try self.realm.write {
+                        realm.delete(item)
+                        tableView.deleteRows(at: [indexPath], with: .fade)
+                    }
+                } catch {
+                    print("Error deleting category, \(error)")
+                }
+            }
+        }
+    }
+    
     
     
 }
