@@ -65,6 +65,21 @@ class TodoListViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            if let item = todoItems?[indexPath.row] {
+                do {
+                    try self.realm.write {
+                        realm.delete(item)
+                        tableView.deleteRows(at: [indexPath], with: .fade)
+                    }
+                } catch {
+                    print("Error deleting item, \(error)")
+                }
+            }
+        }
+    }
+    
     //MARK: - Add new items
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
